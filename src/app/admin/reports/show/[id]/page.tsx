@@ -5,13 +5,14 @@ import useShow from 'hooks/useShow';
 import { useParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { Clients, Result, Room, TableAsset } from './components';
-import { ItemDetail ,Report} from 'types/data';
-
+import { ItemDetail, Report } from 'types/data';
 
 export default function ReportDetail() {
-
   const { id } = useParams();
-  const { data: report } = useShow<Report>(`${process.env.NEXT_PUBLIC_BASE_URL}/reports`, id);
+  const { data: report } = useShow<Report>(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/reports`,
+    id,
+  );
 
   const [filteredItems, setFilteredItems] = useState<ItemDetail[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -21,7 +22,10 @@ export default function ReportDetail() {
   const itemsPerPage = 10;
 
   useEffect(() => {
-    if (!report?.result?.items_details) return;
+    if (!report?.result?.items_details) {
+      setFilteredItems([]);
+      return;
+    }
 
     let items = report.result.items_details;
 
@@ -30,12 +34,14 @@ export default function ReportDetail() {
     }
 
     if (selectedDepartment) {
-      items = items.filter((item) => item.department?.name === selectedDepartment);
+      items = items.filter(
+        (item) => item.department?.name === selectedDepartment,
+      );
     }
 
     if (searchTerm.trim()) {
       items = items.filter((item) =>
-        item.label?.toLowerCase().includes(searchTerm.toLowerCase())
+        item.label?.toLowerCase().includes(searchTerm.toLowerCase()),
       );
     }
 
@@ -46,7 +52,7 @@ export default function ReportDetail() {
   const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
   const currentItems = filteredItems.slice(
     (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
+    currentPage * itemsPerPage,
   );
 
   const handlePrev = () => {
@@ -58,15 +64,23 @@ export default function ReportDetail() {
   };
 
   if (!report) {
-    return <p className="p-6 text-center text-gray-500">لا توجد بيانات لعرضها</p>;
+    return (
+      <p className="p-6 text-center text-gray-500 dark:text-gray-400">
+        لا توجد بيانات لعرضها
+      </p>
+    );
   }
 
   const client_id = report.client;
   const room_id = report.room;
   const result = report.result?.stats;
+  console.log('filteredItems:', filteredItems);
 
   return (
-    <div dir="rtl" className="rtl mx-auto max-w-4xl rounded-lg bg-white p-6 shadow-md dark:bg-gray-800 dark:text-gray-200">
+    <div
+      dir="rtl"
+      className="rtl mx-auto max-w-4xl rounded-lg bg-white p-6 shadow-md dark:bg-gray-800 dark:text-gray-200"
+    >
       <h2 className="mb-4 text-xl font-bold">تفاصيل التقرير #{id}</h2>
 
       <Clients client_id={client_id} />
@@ -78,16 +92,25 @@ export default function ReportDetail() {
           type="search"
           placeholder="ابحث عن طريق الكود"
           value={searchTerm}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setSearchTerm(e.target.value)
+          }
           className="rounded-lg border p-2"
         />
-      <button
-  onClick={() => handleExportReportDetail(filteredItems, id, client_id, room_id, result)}
-  className="rounded-lg bg-blue-600 px-4 py-2 text-white transition hover:bg-blue-700"
->
-  تصدير Excel
-</button>
-
+        <button
+          onClick={() => {
+            handleExportReportDetail(
+              filteredItems,
+              id,
+              client_id,
+              room_id,
+              result,
+            );
+          }}
+          className="rounded-lg bg-blue-600 px-4 py-2 text-white shadow transition hover:bg-blue-700"
+        >
+          تصدير Excel
+        </button>
       </section>
 
       <TableAsset

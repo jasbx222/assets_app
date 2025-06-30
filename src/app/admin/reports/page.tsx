@@ -147,12 +147,7 @@ export default function Page() {
               </option>
             ))}
           </select>
-          <button
-            onClick={() => handleExport(filteredData)}
-            className="rounded-lg bg-blue-600 px-4 py-2 text-white shadow transition hover:bg-blue-700"
-          >
-            تصدير Excel
-          </button>
+          
         </div>
       </div>
 

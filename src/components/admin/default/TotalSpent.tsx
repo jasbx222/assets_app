@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import { useMemo, useState } from "react";
 import { ApexOptions } from "apexcharts";
 import useGet from "hooks/useGet";
+import useGetProfile from "hooks/useGetProfile";
 
 const TotalSpent = () => {
   const [period, setPeriod] = useState<"month" | "3months" | "year">("month");
@@ -72,7 +73,12 @@ const TotalSpent = () => {
 
     return { chartData, chartOptions, percentageChange };
   }, [filteredData]);
-
+  interface AssetItem{
+     total:number
+}
+  const { data:length_items } = useGetProfile<AssetItem>(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/asset-item`,
+  );
   return (
     <Card extra="!p-[20px] text-center">
       <div className="flex justify-between">
@@ -94,7 +100,7 @@ const TotalSpent = () => {
       <div className="flex flex-row justify-between sm:flex-wrap lg:flex-nowrap">
         <div className="flex flex-col">
           <p className="mt-[20px] text-3xl font-bold text-navy-700 dark:text-white">
-            {filteredData?.length || 0}
+            {length_items?.total || 0}
           </p>
           <div className="flex flex-col items-start">
             <p className="mt-2 text-sm text-gray-600">مجموع الأصول</p>
@@ -116,7 +122,7 @@ const TotalSpent = () => {
         </div>
 
         <div className="h-full w-full">
-          <LineChart chartOptions={chartOptions} chartData={chartData} />
+          <LineChart  />
         </div>
       </div>
     </Card>

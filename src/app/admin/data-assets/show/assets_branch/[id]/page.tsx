@@ -35,8 +35,18 @@ export default function AssetItemsTable() {
     params.set('page', page.toString());
     router.replace(`?${params.toString()}`);
   };
-  if (!data) return null;
-
+   if (data.length <=0)
+    return (
+      <div className="flex h-screen items-center justify-center ">
+        <div className="text-center">
+          <h1 className="text-6xl font-bold text-gray-800">
+            <p className="mt-4 text-lg text-gray-600">
+        لم يتم العثور على بيانات الأصل.
+            </p>
+          </h1>
+        </div>
+      </div>
+    );
   return (
     <div dir="rtl" className="container mx-auto px-4 py-10">
       <h1 className="mb-6 text-center text-2xl font-bold text-blue-800">
@@ -47,10 +57,10 @@ export default function AssetItemsTable() {
         value={query}
         onChange={(e:any) => setQuery(e.target.value)}
       />
-      {
-        data.length <=0  ?<div>no </div>:<div className="overflow-x-auto rounded-xl border border-gray-200 shadow-lg">
+     
+       <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-lg">
         <table className="min-w-full bg-white text-right text-sm">
-          <thead className="bg-blue-600 text-sm text-white md:text-base">
+          <thead className="bg-blue-600 dark:bg-navy-800  dark:text-white text-sm text-white md:text-base">
             <tr>
               <th className="px-4 py-3">الكود</th>
               <th className="px-4 py-3">الأصل</th>
@@ -62,9 +72,9 @@ export default function AssetItemsTable() {
               <th className="px-4 py-3">الجهة</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className='dark:bg-navy-800  dark:text-white'>
             {currentItems?.map((item) => (
-              <tr key={item.id} className="border-b hover:bg-gray-50">
+              <tr key={item.id} className="">
                 <td className="px-4 py-3 font-mono text-xs text-gray-700">
                   {item.label}
                 </td>
@@ -115,7 +125,7 @@ export default function AssetItemsTable() {
           </tfoot>
         </table>
       </div>
-      }
+   
 
       <Pageination
         totalPages={totalPages}

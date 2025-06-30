@@ -1,36 +1,31 @@
-
 import { ItemDetail } from "types/data";
-// import Swal from 'sweetalert2';
 import * as XLSX from 'xlsx';
 
 const translateStatus = (status: string) => {
   switch (status) {
-    case 'new':
-      return 'جديدة';
-    case 'found':
-      return 'موجودة';
-    case 'damaged':
-      return 'تالفة';
-    case 'unknown':
-      return 'غير معروفة';
-    case 'other_room':
-      return 'في غرفة أخرى';
-    default:
-      return status || '-';
+    case 'new': return 'جديدة';
+    case 'found': return 'موجودة';
+    case 'damaged': return 'تالفة';
+    case 'unknown': return 'غير معروفة';
+    case 'other_room': return 'في غرفة أخرى';
+    default: return status || '-';
   }
 };
-
 export function handleExportReportDetail(
-  filteredItems: ItemDetail[],
+  filteredItems: ItemDetail[] = [],
   id: any,
   client: any,
   room: any,
   stats: any
 ) {
-  
+  console.log('filteredItems', filteredItems);
+  console.log('client', client);
+  console.log('room', room);
+  console.log('stats', stats);
+
   const data: any[][] = [];
 
-  // معلومات الموظف
+  // بيانات الموظف
   data.push(['معلومات الموظف']);
   data.push(['الاسم', client?.name || '-']);
   data.push(['الهاتف', client?.phone || '-']);
@@ -39,7 +34,7 @@ export function handleExportReportDetail(
   data.push(['القسم', client?.division?.department?.name || '-']);
   data.push([]);
 
-  // معلومات الغرفة
+  // بيانات الغرفة
   data.push(['معلومات الغرفة']);
   data.push(['اسم الغرفة', room?.name || '-']);
   data.push(['الشعبة', room?.division?.name || '-']);
@@ -57,24 +52,28 @@ export function handleExportReportDetail(
   data.push(['في غرفة أخرى', stats?.other_room_count ?? '-']);
   data.push([]);
 
-  // عنوان جدول تفاصيل العناصر
+  // عنوان الجدول
   data.push(['رقم الملصق', 'الحالة', 'اسم الأصل', 'في الغرفة المطلوبة']);
 
-  // بيانات العناصر مع ترجمة الحالات
-  filteredItems.forEach((item:any) => {
-    data.push([
-      item.label || '-',
-      translateStatus(item.status),
-      item.asset_name || '-',
-      item.in_requested_room ? 'نعم' : 'لا',
-    ]);
-  });
+  if (!filteredItems.length) {
+    // لو ما في عناصر، اضف صف واحد فقط يوضح عدم وجود بيانات
+    data.push(['-', '-', 'لا توجد بيانات', '-']);
+  } else {
+    filteredItems.forEach((item: ItemDetail) => {
+      data.push([
+        item.label || '-',
+        translateStatus(item.status),
+        item.asset_name || '-',
+        item.in_requested_room ? 'نعم' : 'لا',
+      ]);
+    });
+  }
 
-  // إنشاء ورقة من البيانات
+  // انشئ ورقة العمل
   const ws = XLSX.utils.aoa_to_sheet(data);
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, 'تقرير');
 
-  // حفظ الملف
+  // احفظ الملف
   XLSX.writeFile(wb, `تقرير-${id}.xlsx`);
 }

@@ -6,12 +6,13 @@ import NavLink from 'components/link/NavLink';
 import { RiMoonFill, RiSunFill } from 'react-icons/ri';
 import { FaUser } from 'react-icons/fa';
 import axios from 'axios';
+
 import { useRouter } from 'next/navigation';
 import { Bell } from 'lucide-react';
 import useGetnotific from 'hooks/useGetNotifcations';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
-
+   
 const Navbar = (props: { onOpenSidenav: () => void; brandText: string; secondary?: boolean | string; [x: string]: any; }) => {
   const { onOpenSidenav, brandText } = props;
   const [darkmode, setDarkmode] = useState(typeof window !== 'undefined' && document.body.classList.contains('dark'));
@@ -29,16 +30,16 @@ const Navbar = (props: { onOpenSidenav: () => void; brandText: string; secondary
     read_at: string | null;
   };
 
-  function formatArabicDate(dateString: string) {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('ar-EG', { month: 'long', hour: 'numeric', day: 'numeric' });
-  }
+  // function formatArabicDate(dateString: string) {
+  //   const date = new Date(dateString);
+  //   return date.toLocaleDateString('ar-EG', { month: 'long', hour: 'numeric', day: 'numeric' });
+  // }
 
   const { data } = useGetnotific<NotificationItem>(`${process.env.NEXT_PUBLIC_BASE_URL}/notification`);
   const { data: filterData } = useGetnotific<NotificationItem>(`${process.env.NEXT_PUBLIC_BASE_URL}/notification`);
 
   const filter = filterData
-    .filter((item) => formatArabicDate(item.created_at).toLocaleLowerCase().includes(query.toLocaleLowerCase()))
+    .filter((item) => item.created_at.toLocaleLowerCase().includes(query.toLocaleLowerCase()))
     .filter((item) => !clearedIds.includes(item.id));
 
   useEffect(() => {
@@ -48,6 +49,8 @@ const Navbar = (props: { onOpenSidenav: () => void; brandText: string; secondary
       if (newest.id !== lastSeenId) {
         setLastNotifId(newest.id);
         setPopupVisible(true);
+        const audio = new Audio('/notification.mp3');
+        audio.play().catch((e) => console.warn('فشل تشغيل الصوت:', e));
         localStorage.setItem('lastSeenNotificationId', newest.id);
         setTimeout(() => setPopupVisible(false), 4000);
       }
@@ -143,7 +146,7 @@ const Navbar = (props: { onOpenSidenav: () => void; brandText: string; secondary
                       <p className="text-sm font-medium text-gray-800 dark:text-white">{notification.notification.title}</p>
                       <p className="text-sm font-medium text-gray-800 dark:text-white">{notification.notification.body}</p>
                     </Link>
-                    <span className="text-xs text-gray-800 dark:text-gray-300">{formatArabicDate(notification.created_at)}</span>
+                    <span className="text-xs text-gray-800 dark:text-gray-300">{notification.created_at}</span>
                     <button
                       onClick={() => handleClearNotification(notification.id)}
                       className="self-start mt-1 text-xs text-red-600 hover:underline dark:text-red-400"

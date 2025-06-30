@@ -3,8 +3,7 @@ import usePost from 'hooks/usePost';
 import { HiX } from 'react-icons/hi';
 import Swal from 'sweetalert2';
 import {toast} from 'react-toastify'
-import useGet from 'hooks/useGet';
-import { Asset } from 'types/data';
+
 interface AddNewEssetsProps {
   isOpen: boolean;
   onClose: () => void;
@@ -18,7 +17,7 @@ const AddNewEssets: React.FC<AddNewEssetsProps> = ({ isOpen, onClose ,refetch}) 
   const [note, setNote] = useState('');
 
   if (!isOpen) return null;
-// const {data,refetch}=useGet(`${process.env.NEXT_PUBLIC_BASE_URL}/assets`)
+
   const handleAddNewAssetsFunction = async (e: React.FormEvent) => {
     e.preventDefault();
 

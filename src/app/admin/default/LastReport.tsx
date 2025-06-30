@@ -28,15 +28,9 @@ type Report = {
 
 export default function LastReport() {
   const { data: reports = [] } = useGet<Report>(`${process.env.NEXT_PUBLIC_BASE_URL}/reports`);
-  const [lastReport, setLastReport] = useState<Report | null>(null);
+  console.log(reports[41])
+  const [lastReport, setLastReport] = useState<Report | null>(reports[0]);
 
-  useEffect(() => {
-    if (!reports.length) return;
-    const sortedReports = [...reports].sort(
-      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-    );
-    setLastReport(sortedReports[0]);
-  }, [reports]);
 
   if (!lastReport) return <p className="p-6 text-center text-gray-500">لا توجد عمليات جرد</p>;
 

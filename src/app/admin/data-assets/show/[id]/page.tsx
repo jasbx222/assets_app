@@ -77,17 +77,20 @@ export default function Page() {
               </p>
             </div>
           </div>
-          <Link href={`assets_branch/${id}`}>
-            <div className="flex items-start gap-3">
-              <MoreHorizontal className="mt-1 text-green-500" />
-              <div>
-                <h2 className="text-lg font-semibold text-gray-700 dark:text-gray-200">
-                  الاصول الفرعية
-                </h2>
-                الاصول الفرعية
-              </div>
-            </div>
-          </Link>
+<Link href={`assets_branch/${id}`}>
+  <div className="flex items-center gap-4 p-4 rounded-2xl dark:border-gray-700 shadow-sm hover:shadow-md transition-all duration-300 cursor-pointer bg-white dark:bg-gray-900 hover:bg-gray-50 dark:hover:bg-gray-800">
+    <MoreHorizontal className="text-green-500 w-5 h-5 mt-1" />
+    <div>
+      <h2 className="text-lg font-semibold text-gray-700 dark:text-gray-200">
+      الاصول الفرعية
+      </h2>
+      <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+        عرض التفاصيل المرتبطة بهذه الوحدة
+      </p>
+    </div>
+  </div>
+</Link>
+
           <div className="flex items-start gap-3">
             <CalendarDays className="mt-1 text-yellow-500" />
             <div>

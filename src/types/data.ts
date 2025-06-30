@@ -56,6 +56,7 @@ export type EmployeeShow = {
 };
 export type AssetItem = {
   id: number;
+   total:number
   label: string;
   status: string;
   items_length:any;
@@ -65,6 +66,7 @@ export type AssetItem = {
     image: string;
     note: string | null;
     created_at: string;
+
   };
   room: {
     id: number;
@@ -86,6 +88,7 @@ export type AssetItem = {
       };
     };
   };
+
 };
 
 export type Client = {
@@ -138,6 +141,10 @@ export type Asset = {
   name: string;
   image: any;
   note: string | null;
+  created_at: string;
+};
+export type LastReportType = {
+  id: number;
   created_at: string;
 };
 export interface AssetItemBranch {

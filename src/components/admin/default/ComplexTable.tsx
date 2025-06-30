@@ -52,7 +52,7 @@ const AssetTable = ({
           placeholder="ابحث عن طريق الكود"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full md:w-1/3 rounded-lg border p-2 text-sm"
+          className="w-full dark:text-gray-700 md:w-1/3 rounded-lg border p-2 text-sm"
         />
 
         <button

@@ -4,20 +4,24 @@ import Card from "components/card";
 import { useEffect, useState } from "react";
 import { Rss } from "lucide-react";
 import useGet from "hooks/useGet";
+import useGetProfile from "hooks/useGetProfile";
 
 const ProgressItems = () => {
-  const { data: items = [] } = useGet(process.env.NEXT_PUBLIC_BASE_URL+'/asset-item');
-
+  interface AssetItem{
+    total :number
+  }
+   const { data } = useGetProfile<AssetItem>(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/asset-item`,
+  );
   const [countedCount, setCountedCount] = useState(0);
   const [totalCount, setTotalCount] = useState(0);
 
   useEffect(() => {
-    if (items && Array.isArray(items)) {
    
-      setCountedCount(items.length);
-      setTotalCount(100000);
-    }
-  }, [items]);
+      setCountedCount(data?.total);
+      setTotalCount(10000);
+    
+  }, [data]);
 
   const progress = totalCount > 0 ? (countedCount / totalCount) * 100 : 0;
 
@@ -36,8 +40,8 @@ const ProgressItems = () => {
 
       <div className="flex flex-col mt-4">
         <div className="flex justify-between text-sm font-medium text-gray-600">
-          <p>{countedCount.toLocaleString()} تم جرده</p>
-          <p>{totalCount.toLocaleString()} إجمالي العناصر</p>
+          <p>{countedCount} تم جرده</p>
+          <p>{totalCount} إجمالي العناصر</p>
         </div>
 
         <div className="mt-2 flex h-3 w-full items-center rounded-full bg-lightPrimary dark:!bg-navy-700">

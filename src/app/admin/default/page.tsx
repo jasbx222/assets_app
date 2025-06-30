@@ -6,12 +6,19 @@ import { MdBarChart } from 'react-icons/md';
 import Widget from 'components/widget/Widget';
 
 import useGet from 'hooks/useGet';
+import useGetProfile from 'hooks/useGetProfile';
 import { FaBell, FaUser } from 'react-icons/fa';
-import { Asset, AssetItem, Client, DepartmentItems, Entity, NotificationItem } from 'types/data';
+import { Asset, Client, DepartmentItems, Entity, LastReportType, NotificationItem } from 'types/data';
 import LastReport from './LastReport';
+import dayjs from 'dayjs';
+import 'dayjs/locale/ar';
 
+
+interface AssetItem{
+     total:number
+}
 const Dashboard = () => {
-  const { data: tableDataComplex = [] } = useGet<AssetItem>(
+  const { data: tableDataComplex } = useGetProfile<AssetItem>(
     `${process.env.NEXT_PUBLIC_BASE_URL}/asset-item`,
   );
   const { data: empolyee = [] } = useGet<Client>(
@@ -26,10 +33,11 @@ const Dashboard = () => {
   const { data: entities = [] } = useGet<Entity>(
     `${process.env.NEXT_PUBLIC_BASE_URL}/entities`,
   );
-  const { data: assets = [] } = useGet<Asset>(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/assets`,
+  const { data: report } = useGet<LastReportType>(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/reports`,
   );
 
+const lastAsset = report[report.length - 1];
 
   return (
     <div  dir='rtl'>
@@ -38,13 +46,24 @@ const Dashboard = () => {
         <Widget
           icon={<MdBarChart className="h-7 w-7" />}
           title="اجمالي الاصول"
-          subtitle={tableDataComplex.length.toString()}
+          subtitle={tableDataComplex?.total ?? 0}
         />
-        <Widget
-          icon={<MdBarChart className="h-6 w-6" />}
-          title="اخر الجرد"
-          subtitle={assets[assets.length - 1]?.created_at.slice(12, 20) || 'لا يوجد بيانات'}
-        />
+
+<Widget
+  icon={<MdBarChart className="h-6 w-6" />}
+  title="اخر الجرد"
+  subtitle={
+    lastAsset?.created_at
+      ? dayjs(lastAsset.created_at.replace(' | ', ' '), 'YYYY-MM-DD h:mm a')
+          .locale('ar')
+          .format('D MMMM YYYY') 
+      : 'لا يوجد تاريخ'
+  }
+/>
+
+
+
+
         <Widget
           icon={<FaBell className="h-7 w-7" />}
           title="الاشعارات"

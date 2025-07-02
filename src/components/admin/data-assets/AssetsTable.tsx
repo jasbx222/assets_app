@@ -61,7 +61,7 @@ const [res,setRes]=useState('');
  
 
   return (
-<Card extra="w-full h-full sm:overflow-auto px-4">
+<Card extra="w-full h-full px-4">
   <header className="relative flex flex-col sm:flex-row sm:items-center justify-between pt-4 gap-4">
     
     {/* زر الإضافة */}
@@ -76,7 +76,7 @@ const [res,setRes]=useState('');
   </header>
 
   {/* جدول البيانات */}
-  <div className="mt-8 overflow-x-auto">
+  <div className="mt-8 ">
     <table className="min-w-[700px] w-full text-right">
       <thead>
         <tr className="border-b border-gray-400 dark:border-white/30">

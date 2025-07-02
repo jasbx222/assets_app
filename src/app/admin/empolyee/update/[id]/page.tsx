@@ -7,10 +7,11 @@ import useUpdate from 'hooks/useUpdate';
 import { useRouter, useParams } from 'next/navigation';
 import useShow from 'hooks/useShow';
 import { EmployeeShow } from '../../../../../types/data';
-import {toast} from 'react-toastify'
+import { toast } from 'react-toastify';
+
 type Entity = { id: number; name: string };
 type Department = { id: number; name: string };
-type Division = { id: number; name: string };
+type Division = { id: number; name: string; department_id: number };
 
 const Page = () => {
   const params = useParams();
@@ -47,13 +48,17 @@ const Page = () => {
   const { data: departmentsData = [] } = useGet<Department>(
     `${process.env.NEXT_PUBLIC_BASE_URL}/departments`
   );
+
+  // جلب الشعب حسب القسم المحدد فقط
   const { data: divisionsData = [] } = useGet<Division>(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/divisions`
+    departmentId
+      ? `${process.env.NEXT_PUBLIC_BASE_URL}/divisions?department_id=${departmentId}`
+      : `${process.env.NEXT_PUBLIC_BASE_URL}/divisions`
   );
 
-  const { update, response } = useUpdate();
+  const { update } = useUpdate();
 
-  const handleSubmit =async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!id) return;
@@ -68,8 +73,8 @@ const Page = () => {
       division_id: Number(divisionId),
     };
 
-   await update(`${process.env.NEXT_PUBLIC_BASE_URL}/clients/${id}`, payload);
-   toast.success('تم التعديل بنجاح')
+    await update(`${process.env.NEXT_PUBLIC_BASE_URL}/clients/${id}`, payload);
+    toast.success('تم التعديل بنجاح');
   };
 
   return (
@@ -85,18 +90,11 @@ const Page = () => {
           viewBox="0 0 24 24"
           stroke="currentColor"
         >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M6 18L18 6M6 6l12 12"
-          />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
         </svg>
       </button>
 
-      <h1 className="text-2xl font-bold text-navy-700 dark:text-white">
-        تعديل معلومات الموظف
-      </h1>
+      <h1 className="text-2xl font-bold text-navy-700 dark:text-white">تعديل معلومات الموظف</h1>
 
       <div className="mt-5 w-full max-w-md">
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -133,16 +131,14 @@ const Page = () => {
           />
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-white">
-              الهيئة
-            </label>
+            <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-white">الهيئة</label>
             <select
               className="w-full rounded border px-3 py-2 dark:bg-navy-700 dark:text-white"
               value={entityId}
               onChange={(e) => setEntityId(e.target.value)}
             >
               <option value="">اختر الهيئة</option>
-              {entities.map((e) => (
+              {entities.map((e:any) => (
                 <option key={e.id} value={e.id}>
                   {e.name}
                 </option>
@@ -151,9 +147,7 @@ const Page = () => {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-white">
-              القسم الرئيسي
-            </label>
+            <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-white">القسم الرئيسي</label>
             <select
               className="w-full rounded border px-3 py-2 dark:bg-navy-700 dark:text-white"
               value={departmentId}
@@ -161,21 +155,20 @@ const Page = () => {
             >
               <option value="">اختر القسم الرئيسي</option>
               {departmentsData.map((d) => (
-                <option key={d.id} value={d?.id}>
-                  {d?.name}
+                <option key={d.id} value={d.id}>
+                  {d.name}
                 </option>
               ))}
             </select>
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-white">
-              الشعبة
-            </label>
+            <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-white">الشعبة</label>
             <select
               className="w-full rounded border px-3 py-2 dark:bg-navy-700 dark:text-white"
               value={divisionId}
               onChange={(e) => setDivisionId(e.target.value)}
+              disabled={!departmentId}
             >
               <option value="">اختر الشعبة</option>
               {divisionsData.map((d) => (

@@ -12,6 +12,7 @@ import { Bell } from 'lucide-react';
 import useGetnotific from 'hooks/useGetNotifcations';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
+import { getDecryptedToken } from 'hooks/getDecryptedToken';
    
 const Navbar = (props: { onOpenSidenav: () => void; brandText: string; secondary?: boolean | string; [x: string]: any; }) => {
   const { onOpenSidenav, brandText } = props;
@@ -30,10 +31,7 @@ const Navbar = (props: { onOpenSidenav: () => void; brandText: string; secondary
     read_at: string | null;
   };
 
-  // function formatArabicDate(dateString: string) {
-  //   const date = new Date(dateString);
-  //   return date.toLocaleDateString('ar-EG', { month: 'long', hour: 'numeric', day: 'numeric' });
-  // }
+
 
   const { data } = useGetnotific<NotificationItem>(`${process.env.NEXT_PUBLIC_BASE_URL}/notification`);
   const { data: filterData } = useGetnotific<NotificationItem>(`${process.env.NEXT_PUBLIC_BASE_URL}/notification`);
@@ -62,7 +60,7 @@ const Navbar = (props: { onOpenSidenav: () => void; brandText: string; secondary
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + localStorage.getItem('token'),
+        Authorization: 'Bearer ' + getDecryptedToken(),
       },
     }).then(() => {
       localStorage.clear();

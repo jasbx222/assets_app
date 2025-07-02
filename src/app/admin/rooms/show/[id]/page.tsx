@@ -93,7 +93,7 @@ const translateStatus = (status:string) => {
         <SearchInput
           plaecholder="ابحث عن طريق الكود"
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(e:any) => setQuery(e.target.value)}
         />
         <button
           onClick={exportToExcel}
@@ -152,8 +152,8 @@ const translateStatus = (status:string) => {
           </tbody>
           <tfoot>
             <tr>
-              <td>مجموع الأصول</td>
-              <td>{data?.length}</td>
+              <td  className='dark:text-white'>مجموع الأصول</td>
+              <td className='dark:text-white'>({data?.length})</td>
             </tr>
           </tfoot>
         </table>

@@ -16,6 +16,7 @@ type Client = {
     name: string;
     department: { id: number; name: string; entity: any; created_at: string };
     assets_count: number;
+    
     created_at: string;
   };
 };

@@ -47,6 +47,18 @@ export default function AssetItemsTable() {
         </div>
       </div>
     );
+    const translateStatus = (status:string) => {
+      switch(status) {
+        case 'new': return 'جديد';
+        case 'damaged': return 'متضرر';
+        case 'Unsigned': return 'غير موقعة';
+        case 'Missing': return 'مفقود ';
+        case 'Match': return 'مطابق';
+        case 'Unknown': return 'غير معرف  ';
+    
+        default: return status;
+      }
+    };
   return (
     <div dir="rtl" className="container mx-auto px-4 py-10">
       <h1 className="mb-6 text-center text-2xl font-bold text-blue-800">
@@ -102,7 +114,7 @@ export default function AssetItemsTable() {
                         : 'bg-yellow-100 text-yellow-700'
                     }`}
                   >
-                    {item.status === 'new' ? 'جديد' : item.status}
+                  { translateStatus(item.status)}
                   </span>
                 </td>
 

@@ -42,7 +42,18 @@ const AssetTable = ({
   const filter = tableData.filter((item) =>
     item.label.toLowerCase().includes(searchTerm.toLowerCase()),
   );
+const translateStatus = (status:string) => {
+  switch(status) {
+    case 'new': return 'جديد';
+    case 'damaged': return 'متضرر';
+    case 'Unsigned': return 'غير موقعة';
+    case 'Missing': return 'مفقود ';
+    case 'Match': return 'مطابق';
+    case 'Unknown': return 'غير معرف  ';
 
+    default: return status;
+  }
+};
   return (
     <Card extra="w-full container    px-2 sm:px-4 pb-6   relative top-12  " >
       {/* البحث والتصدير */}
@@ -85,7 +96,9 @@ const AssetTable = ({
                   {row.status === 'new' && <MdCheckCircle className="text-green-500" />}
                   {row.status === 'damaged' && <MdCancel className="text-red-500" />}
                   {row.status === 'مستعمل' && <MdOutlineError className="text-yellow-500" />}
-                  <span>{row.status}</span>
+                  <span>
+                    {translateStatus(row.status)}
+                  </span>
                 </td>
                 <td className="px-3 py-2">{row.asset.created_at}</td>
                 <td className="px-3 py-2">{row.label}</td>
